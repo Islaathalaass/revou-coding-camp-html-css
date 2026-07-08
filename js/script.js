@@ -101,16 +101,35 @@ function updateTotalBalance() {
 }
 
 // ============================================
-// TODO (Kamis): FUNGSI RENDER PIE CHART
+// FUNGSI RENDER PIE CHART
 // ============================================
 function renderChart() {
   // 1. Hitung total amount per kategori (Food, Transport, Fun)
+  const categoryTotals = {
+    Food: 0,
+    Transport: 0, 
+    Fun: 0
+  };
+  transactions.forEach(function(transaction){
+    if(categoryTotals[transaction.category] !== underfined) {
+      categoryTotals[transaction.category] += transaction.amount;
+    }
+  });
   // 2. Kalau categoryChart udah pernah dibikin, destroy dulu: categoryChart.destroy()
+  if (categoryChart !==null){
+    categoryChart.destroy();
+  }
   // 3. Bikin chart baru pakai Chart.js:
-  //    categoryChart = new Chart(chartCanvas, {
-  //      type: 'pie',
-  //      data: { labels: [...], datasets: [{ data: [...], backgroundColor: [...] }] }
-  //    });
+ categoryChart = new chartCanvas(chartCanvas,{
+  type: 'pie',
+  data: {
+    labels:['food', 'transport', 'fun'],
+    datasets: [{
+      data:[categoryTotals.Food, categoryTotals.Transport, categoryTotals.Fun],
+      backgroundColor: ['#2ecc71','#3498db', '#e67e22']
+    }]
+  }
+ });
 }
 
 // ============================================
