@@ -120,17 +120,16 @@ function renderChart() {
     categoryChart.destroy();
   }
   // 3. Bikin chart baru pakai Chart.js:
- categoryChart = new chartCanvas(chartCanvas,{
+categoryChart = new Chart(chartCanvas, {
   type: 'pie',
   data: {
-    labels:['food', 'transport', 'fun'],
+    labels: ['Food', 'Transport', 'Fun'],
     datasets: [{
-      data:[categoryTotals.Food, categoryTotals.Transport, categoryTotals.Fun],
-      backgroundColor: ['#2ecc71','#3498db', '#e67e22']
+      data: [categoryTotals.Food, categoryTotals.Transport, categoryTotals.Fun],
+      backgroundColor: ['#2ecc71', '#3498db', '#e67e22']
     }]
   }
- });
-}
+});
 
 // ============================================
 // FUNGSI SIMPAN KE LOCAL STORAGE
