@@ -130,7 +130,7 @@ categoryChart = new Chart(chartCanvas, {
     }]
   }
 });
-
+}
 // ============================================
 // FUNGSI SIMPAN KE LOCAL STORAGE
 // ============================================
