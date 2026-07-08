@@ -12,60 +12,92 @@ const totalBalanceEl = document.getElementById('total-balance');
 const chartCanvas = document.getElementById('category-chart');
 
 // --- Data transaksi ---
-// TODO (Rabu): load data dari Local Storage kalau ada, kalau belum ada mulai dari array kosong
-// Contoh: let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-let transactions = [];
+// Load dari Local Storage kalau ada, kalau belum ada mulai dari array kosong
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
 // --- Chart.js instance (biar bisa di-destroy & re-render tiap ada perubahan) ---
 let categoryChart = null;
 
 // ============================================
-// TODO (Rabu): FUNGSI TAMBAH TRANSAKSI
+// FUNGSI TAMBAH TRANSAKSI
 // ============================================
 form.addEventListener('submit', function (e) {
   e.preventDefault();
 
-  // 1. Ambil value dari input (itemNameInput.value, amountInput.value, categoryInput.value)
-  // 2. Validasi: kalau ada yang kosong, kasih alert dan return (stop function)
-  // 3. Bikin object transaksi baru, misal:
-  //    const newTransaction = { id: Date.now(), name: ..., amount: ..., category: ... };
-  // 4. Push ke array `transactions`
-  // 5. Panggil saveToLocalStorage()
-  // 6. Panggil renderTransactions()
-  // 7. Panggil updateTotalBalance()
-  // 8. Panggil renderChart()
-  // 9. Reset form (form.reset())
+  const name = itemNameInput.value.trim();
+  const amount = parseFloat(amountInput.value);
+  const category = categoryInput.value;
 
+  if (name === '' || isNaN(amount) || category === '') {
+    alert('Mohon isi semua field ya!');
+    return;
+  }
+
+  const newTransaction = {
+    id: Date.now(),
+    name: name,
+    amount: amount,
+    category: category
+  };
+
+  transactions.push(newTransaction);
+  saveToLocalStorage();
+  renderTransactions();
+  updateTotalBalance();
+  renderChart();
+
+  form.reset();
 });
 
 // ============================================
-// TODO (Rabu): FUNGSI RENDER LIST TRANSAKSI
+// FUNGSI RENDER LIST TRANSAKSI
 // ============================================
 function renderTransactions() {
-  // 1. Kosongin dulu transactionList.innerHTML = ''
-  // 2. Loop tiap item di array `transactions`
-  // 3. Bikin elemen <li> berisi nama, amount, category, dan tombol Delete
-  // 4. Tombol Delete kasih event listener yang manggil fungsi deleteTransaction(id)
-  // 5. Append <li> ke transactionList
+  transactionList.innerHTML = '';
+
+  transactions.forEach(function (transaction) {
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+      <div class="info">
+        <div class="name">${transaction.name}</div>
+        <div class="amount">$${transaction.amount.toFixed(2)}</div>
+        <span class="category">${transaction.category}</span>
+      </div>
+      <button class="delete-btn">Delete</button>
+    `;
+
+    li.querySelector('.delete-btn').addEventListener('click', function () {
+      deleteTransaction(transaction.id);
+    });
+
+    transactionList.appendChild(li);
+  });
 }
 
 // ============================================
-// TODO (Rabu): FUNGSI HAPUS TRANSAKSI
+// FUNGSI HAPUS TRANSAKSI
 // ============================================
 function deleteTransaction(id) {
-  // 1. Filter array `transactions`, buang yang id-nya cocok
-  // 2. Panggil saveToLocalStorage()
-  // 3. Panggil renderTransactions()
-  // 4. Panggil updateTotalBalance()
-  // 5. Panggil renderChart()
+  transactions = transactions.filter(function (transaction) {
+    return transaction.id !== id;
+  });
+
+  saveToLocalStorage();
+  renderTransactions();
+  updateTotalBalance();
+  renderChart();
 }
 
 // ============================================
-// TODO (Rabu): FUNGSI HITUNG TOTAL BALANCE
+// FUNGSI HITUNG TOTAL BALANCE
 // ============================================
 function updateTotalBalance() {
-  // 1. Jumlahin semua amount di array `transactions` (pakai .reduce())
-  // 2. Tampilin ke totalBalanceEl.textContent, format ke 2 desimal contoh: `$${total.toFixed(2)}`
+  const total = transactions.reduce(function (sum, transaction) {
+    return sum + transaction.amount;
+  }, 0);
+
+  totalBalanceEl.textContent = `$${total.toFixed(2)}`;
 }
 
 // ============================================
@@ -82,10 +114,10 @@ function renderChart() {
 }
 
 // ============================================
-// TODO (Rabu): FUNGSI SIMPAN KE LOCAL STORAGE
+// FUNGSI SIMPAN KE LOCAL STORAGE
 // ============================================
 function saveToLocalStorage() {
-  // localStorage.setItem('transactions', JSON.stringify(transactions));
+  localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
 // ============================================
