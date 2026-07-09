@@ -120,3 +120,8 @@ form button:hover {
   border-radius: 6px;
   cursor: pointer;
 }
+
+#category-chart{
+  max-height: 300px;
+}
+

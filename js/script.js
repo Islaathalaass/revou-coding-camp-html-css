@@ -111,7 +111,7 @@ function renderChart() {
     Fun: 0
   };
   transactions.forEach(function(transaction){
-    if(categoryTotals[transaction.category] !== underfined) {
+    if(categoryTotals[transaction.category] !== undefined) {
       categoryTotals[transaction.category] += transaction.amount;
     }
   });
@@ -128,6 +128,10 @@ categoryChart = new Chart(chartCanvas, {
       data: [categoryTotals.Food, categoryTotals.Transport, categoryTotals.Fun],
       backgroundColor: ['#2ecc71', '#3498db', '#e67e22']
     }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true
   }
 });
 }
